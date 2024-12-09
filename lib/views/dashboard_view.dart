@@ -30,10 +30,8 @@ class DashboardView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Summary Cards
                   Row(
                     children: [
-                      // Transaksi Hari Ini Card
                       Expanded(
                         child: Card(
                           elevation: 4,
@@ -47,8 +45,8 @@ class DashboardView extends StatelessWidget {
                                 Row(
                                   children: [
                                     Icon(Icons.receipt_long, 
-                                         color: Colors.blue,
-                                         size: 24),
+                                          color: Colors.blue,
+                                          size: 24),
                                     SizedBox(width: 8),
                                     Text(
                                       'Transaksi Hari Ini',
@@ -74,7 +72,6 @@ class DashboardView extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 16),
-                      // Total Penjualan Card
                       Expanded(
                         child: Card(
                           elevation: 4,
@@ -88,8 +85,8 @@ class DashboardView extends StatelessWidget {
                                 Row(
                                   children: [
                                     Icon(Icons.payments_outlined,
-                                         color: Colors.green,
-                                         size: 24),
+                                          color: Colors.green,
+                                          size: 24),
                                     SizedBox(width: 8),
                                     Text(
                                       'Total Penjualan',
@@ -117,7 +114,6 @@ class DashboardView extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 24),
-                  // Grafik Penjualan
                   Card(
                     elevation: 4,
                     child: Padding(
@@ -148,7 +144,7 @@ class DashboardView extends StatelessWidget {
                             child: BarChart(
                               BarChartData(
                                 alignment: BarChartAlignment.spaceAround,
-                                maxY: ((controller.todaySales.value / 10000).ceil() * 10000).toDouble(),
+                                maxY: ((controller.todaySales.value / 100000).ceil() * 100000).toDouble(),
                                 barTouchData: BarTouchData(
                                   enabled: true,
                                   touchTooltipData: BarTouchTooltipData(
@@ -189,7 +185,7 @@ class DashboardView extends StatelessWidget {
                                     sideTitles: SideTitles(
                                       showTitles: true,
                                       reservedSize: 60,
-                                      interval: 10000,
+                                      interval: 100000,
                                       getTitlesWidget: (value, meta) {
                                         return Text(
                                           'Rp ${(value / 1000).toStringAsFixed(0)}k',
@@ -210,7 +206,7 @@ class DashboardView extends StatelessWidget {
                                 ),
                                 gridData: FlGridData(
                                   show: true,
-                                  horizontalInterval: 10000,
+                                  horizontalInterval: 100000,
                                   getDrawingHorizontalLine: (value) {
                                     return FlLine(
                                       color: Colors.grey[300],

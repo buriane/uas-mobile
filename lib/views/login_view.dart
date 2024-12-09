@@ -52,26 +52,26 @@ class LoginView extends StatelessWidget {
                 ),
                 SizedBox(height: 24),
                 Obx(() => ElevatedButton(
-                  onPressed: authController.isLoading.value
-                      ? null
-                      : () async {
-                          if (_formKey.currentState!.validate()) {
-                            final success = await authController.login(
-                              _usernameController.text,
-                              _passwordController.text,
-                            );
-                            if (success) {
-                              Get.offAllNamed('/dashboard');
-                            }
-                          }
-                        },
-                  child: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: authController.isLoading.value
-                        ? CircularProgressIndicator(color: Colors.white)
-                        : Text('Login', style: TextStyle(fontSize: 16)),
-                  ),
-                )),
+                      onPressed: authController.isLoading.value
+                          ? null
+                          : () async {
+                              if (_formKey.currentState!.validate()) {
+                                final success = await authController.login(
+                                  _usernameController.text,
+                                  _passwordController.text,
+                                );
+                                if (success) {
+                                  Get.offAllNamed('/dashboard');
+                                }
+                              }
+                            },
+                      child: Padding(
+                        padding: EdgeInsets.all(12),
+                        child: authController.isLoading.value
+                            ? CircularProgressIndicator(color: Colors.white)
+                            : Text('Login', style: TextStyle(fontSize: 16)),
+                      ),
+                    )),
                 SizedBox(height: 16),
                 Obx(() => authController.error.value.isNotEmpty
                     ? Text(

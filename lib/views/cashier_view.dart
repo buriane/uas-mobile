@@ -23,16 +23,13 @@ class CashierView extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         }
 
-        return Row(
-          children: [
-            // Products Management - Left Side
-            Expanded(
-              flex: 2,
-              child: Card(
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Card(
                 margin: EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    // Form Tambah Produk Baru
                     Padding(
                       padding: EdgeInsets.all(16),
                       child: Form(
@@ -104,7 +101,6 @@ class CashierView extends StatelessWidget {
                       ),
                     ),
                     Divider(),
-                    // Daftar Produk yang Sudah Ada
                     Padding(
                       padding: EdgeInsets.all(16),
                       child: Text(
@@ -115,7 +111,8 @@ class CashierView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Expanded(
+                    Container(
+                      height: 200,
                       child: ListView.builder(
                         itemCount: controller.products.length,
                         itemBuilder: (context, index) {
@@ -138,11 +135,7 @@ class CashierView extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-            // Cart - Right Side (Tetap sama seperti sebelumnya)
-            Expanded(
-              flex: 3,
-              child: Card(
+              Card(
                 margin: EdgeInsets.all(16),
                 child: Column(
                   children: [
@@ -156,7 +149,8 @@ class CashierView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Expanded(
+                    Container(
+                      height: 200,
                       child: ListView.builder(
                         itemCount: controller.currentItems.length,
                         itemBuilder: (context, index) {
@@ -166,15 +160,35 @@ class CashierView extends StatelessWidget {
                           );
                           return ListTile(
                             title: Text(product.name),
-                            subtitle:
-                                Text('${item.quantity} x Rp ${item.price}'),
+                            subtitle: Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.remove_circle_outline),
+                                  onPressed: () => controller
+                                      .updateItemQuantity(index, false),
+                                ),
+                                Obx(() => Text(
+                                      '${item.quantity}',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                IconButton(
+                                  icon: Icon(Icons.add_circle_outline),
+                                  onPressed: () => controller
+                                      .updateItemQuantity(index, true),
+                                ),
+                                Text('x Rp ${item.price}'),
+                              ],
+                            ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  'Rp ${(item.quantity * item.price).toStringAsFixed(2)}',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
+                                Obx(() => Text(
+                                      'Rp ${(item.quantity.value * item.price).toStringAsFixed(2)}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )),
                                 SizedBox(width: 8),
                                 IconButton(
                                   icon: Icon(Icons.delete),
@@ -200,14 +214,14 @@ class CashierView extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
-                                'Rp ${controller.total.value.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue,
-                                ),
-                              ),
+                              Obx(() => Text(
+                                    'Rp ${controller.total.value.toStringAsFixed(2)}',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                  )),
                             ],
                           ),
                           SizedBox(height: 16),
@@ -232,8 +246,8 @@ class CashierView extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       }),
     );
@@ -244,7 +258,7 @@ class CashierView extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add ${product.name}'),
+        title: Text('Tambah ${product.name}'),
         content: Form(
           key: _formKey,
           child: CustomInput(
@@ -296,7 +310,7 @@ class CashierView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              Get.back(); 
+              Get.back();
               final success = await controller.completeTransaction();
               if (success) {
                 Get.snackbar(

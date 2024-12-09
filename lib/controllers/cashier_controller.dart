@@ -25,11 +25,10 @@ class CashierController extends GetxController {
       );
 
       final data = json.decode(response.body);
-      
+
       if (data['success']) {
         products.value = List<Product>.from(
-          data['products'].map((x) => Product.fromJson(x))
-        );
+            data['products'].map((x) => Product.fromJson(x)));
       }
     } catch (e) {
       print('Error fetching products: $e');
@@ -47,26 +46,38 @@ class CashierController extends GetxController {
     calculateTotal();
   }
 
+  void updateItemQuantity(int index, bool increment) {
+    if (increment) {
+      currentItems[index].quantity++;
+    } else if (currentItems[index].quantity.value > 1) {
+      currentItems[index].quantity--;
+    }
+    calculateTotal();
+  }
+
   void removeItem(int index) {
     currentItems.removeAt(index);
     calculateTotal();
   }
 
   void calculateTotal() {
-    total.value = currentItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+    total.value = currentItems.fold(
+        0, (sum, item) => sum + (item.price * item.quantity.value));
   }
 
   Future<bool> completeTransaction() async {
     try {
       isLoading.value = true;
-      
+
       final transactionData = {
         'total_amount': total.value,
-        'items': currentItems.map((item) => {
-          'productId': item.productId,
-          'quantity': item.quantity,
-          'price': item.price,
-        }).toList(),
+        'items': currentItems
+            .map((item) => {
+                  'product_id': item.productId, 
+                  'quantity': item.quantity.value,
+                  'price': item.price,
+                })
+            .toList(),
       };
 
       print('Sending transaction data: ${json.encode(transactionData)}');
@@ -74,23 +85,29 @@ class CashierController extends GetxController {
       final response = await http.post(
         Uri.parse('http://192.168.128.10/api/transactions.php'),
         body: json.encode(transactionData),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
       );
 
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 
-      final data = json.decode(response.body);
-      
-      if (data['success']) {
-        currentItems.clear();
-        total.value = 0;
-        return true;
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success']) {
+          currentItems.clear();
+          total.value = 0;
+          return true;
+        } else {
+          throw Exception(data['message'] ?? 'Unknown error occurred');
+        }
       } else {
-        throw Exception(data['message'] ?? 'Unknown error occurred');
+        throw Exception('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error completing transaction: $e'); 
+      print('Error completing transaction: $e');
       Get.snackbar(
         'Error',
         'Failed to complete transaction: ${e.toString()}',
@@ -121,7 +138,7 @@ class CashierController extends GetxController {
       );
 
       final data = json.decode(response.body);
-      
+
       if (data['success']) {
         await fetchProducts();
         productNameController.clear();
