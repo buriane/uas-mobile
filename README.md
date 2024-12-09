@@ -1,4 +1,4 @@
-# Responsi 2 Praktikum Pemrograman Mobile
+# UAS Pemrograman Mobile
 
 Nama: Brian Cahya Purnama
 
