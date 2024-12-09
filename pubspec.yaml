@@ -41,7 +41,8 @@ dev_dependencies:
     sdk: flutter
   get: ^4.6.6
   http: ^1.1.0
-  fl_chart: ^0.63.0
+  fl_chart: ^0.65.0
+  shared_preferences: ^2.2.2
   intl: ^0.18.1
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

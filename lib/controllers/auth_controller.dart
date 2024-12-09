@@ -1,27 +1,45 @@
 import 'package:get/get.dart';
-import '../services/api_service.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../models/user.dart';
 
 class AuthController extends GetxController {
-  final isLoggedIn = false.obs;
-  final username = ''.obs;
+  final Rx<User?> user = Rx<User?>(null);
+  final RxBool isLoading = false.obs;
+  final RxString error = ''.obs;
 
   Future<bool> login(String username, String password) async {
     try {
-      final response = await ApiService.login(username, password);
-      if (response['success']) {
-        this.username.value = username;
-        isLoggedIn.value = true;
+      isLoading.value = true;
+      error.value = '';
+
+      final response = await http.post(
+        Uri.parse('http://192.168.128.10/api/login.php'),
+        body: {
+          'username': username,
+          'password': password,
+        },
+      );
+
+      final data = json.decode(response.body);
+
+      if (data['success']) {
+        user.value = User.fromJson(data['user']);
         return true;
+      } else {
+        error.value = data['message'] ?? 'Login failed';
+        return false;
       }
-      return false;
     } catch (e) {
+      error.value = 'Network error occurred';
       return false;
+    } finally {
+      isLoading.value = false;
     }
   }
 
   void logout() {
-    isLoggedIn.value = false;
-    username.value = '';
+    user.value = null;
     Get.offAllNamed('/login');
   }
 }
