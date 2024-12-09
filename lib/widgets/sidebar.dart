@@ -53,8 +53,8 @@ class Sidebar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Logout'),
+            leading: Icon(Icons.logout, color: Colors.red),
+            title: Text('Logout', style: TextStyle(color: Colors.red)),
             onTap: () => authController.logout(),
           ),
         ],

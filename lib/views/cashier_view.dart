@@ -37,11 +37,15 @@ class CashierView extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text(
-                              'Tambah Produk Baru',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                            Container(
+                              width: double.infinity,
+                              child: Text(
+                                'Tambah Produk Baru',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                             SizedBox(height: 16),
@@ -94,7 +98,14 @@ class CashierView extends StatelessWidget {
                                   }
                                 }
                               },
-                              child: Text('Tambah Produk'),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add),
+                                  SizedBox(width: 8),
+                                  Text('Tambah Produk'),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -126,7 +137,10 @@ class CashierView extends StatelessWidget {
                               onPressed: () {
                                 _showAddItemDialog(context, product);
                               },
-                              child: Text('Tambah ke Keranjang'),
+                              child: Tooltip(
+                                message: 'Tambah ke Keranjang',
+                                child: Icon(Icons.add_shopping_cart),
+                              ),
                             ),
                           );
                         },
@@ -191,7 +205,7 @@ class CashierView extends StatelessWidget {
                                     )),
                                 SizedBox(width: 8),
                                 IconButton(
-                                  icon: Icon(Icons.delete),
+                                  icon: Icon(Icons.delete, color: Colors.red),
                                   onPressed: () => controller.removeItem(index),
                                 ),
                               ],
@@ -233,11 +247,13 @@ class CashierView extends StatelessWidget {
                               padding: EdgeInsets.all(16),
                               child: Text(
                                 'Selesaikan Transaksi',
-                                style: TextStyle(fontSize: 18),
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.white),
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(double.infinity, 50),
+                              backgroundColor: Colors.blue,
                             ),
                           ),
                         ],
@@ -262,7 +278,7 @@ class CashierView extends StatelessWidget {
         content: Form(
           key: _formKey,
           child: CustomInput(
-            label: 'Quantity',
+            label: 'Banyaknya',
             controller: quantityController,
             keyboardType: TextInputType.number,
             validator: (value) {
@@ -279,7 +295,7 @@ class CashierView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text('Cancel'),
+            child: Text('Batal'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -291,7 +307,7 @@ class CashierView extends StatelessWidget {
                 Get.back();
               }
             },
-            child: Text('Add'),
+            child: Text('Tambah'),
           ),
         ],
       ),
