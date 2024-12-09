@@ -125,7 +125,7 @@ class DashboardView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Grafik Penjualan Hari Ini',
+                                'Grafik Penjualan Minggu Ini',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
