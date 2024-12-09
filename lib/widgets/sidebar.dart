@@ -19,10 +19,25 @@ class Sidebar extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.blue,
             ),
-            child: Obx(() => Text(
-              'Welcome ${authController.user.value?.username ?? ""}',
-              style: TextStyle(color: Colors.white, fontSize: 24),
-            )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'POS System',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Selamat Datang, ${authController.user.value?.username ?? ""}',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ],
+            ),
           ),
           ListTile(
             leading: Icon(Icons.dashboard),
@@ -36,6 +51,7 @@ class Sidebar extends StatelessWidget {
             selected: currentRoute == '/cashier',
             onTap: () => Get.offNamed('/cashier'),
           ),
+          Divider(),
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Logout'),

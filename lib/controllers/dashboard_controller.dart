@@ -21,17 +21,33 @@ class DashboardController extends GetxController {
         Uri.parse('http://192.168.128.10/api/dashboard.php'),
       );
 
+      print('Response: ${response.body}');
+
       final data = json.decode(response.body);
       
       if (data['success']) {
-        todaySales.value = double.parse(data['today_stats']['total_sales'] ?? '0');
-        transactionCount.value = int.parse(data['today_stats']['transaction_count'] ?? '0');
-        weeklySales.value = List<Map<String, dynamic>>.from(data['weekly_sales']);
+        if (data['today_stats'] != null) {
+          var totalSales = data['today_stats']['total_sales'];
+          todaySales.value = totalSales != null ? double.parse(totalSales.toString()) : 0.0;
+          
+          var count = data['today_stats']['transaction_count'];
+          transactionCount.value = count != null ? int.parse(count.toString()) : 0;
+          
+          print('Transaction Count: ${transactionCount.value}'); 
+        }
+
+        if (data['weekly_sales'] != null) {
+          weeklySales.value = List<Map<String, dynamic>>.from(data['weekly_sales']);
+        }
       }
     } catch (e) {
       print('Error fetching dashboard data: $e');
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void refreshData() {
+    fetchDashboardData();
   }
 }
